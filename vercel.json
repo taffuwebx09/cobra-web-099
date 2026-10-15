@@ -1,0 +1,20 @@
+{
+  "rewrites": [
+    {
+      "source": "/file09",
+      "destination": "/file09.html"
+    },
+    {
+      "source": "/file09/",
+      "destination": "/file09.html"
+    },
+    {
+      "source": "/FILE09",
+      "destination": "/file09.html"
+    },
+    {
+      "source": "/FILE09/",
+      "destination": "/file09.html"
+    }
+  ]
+}

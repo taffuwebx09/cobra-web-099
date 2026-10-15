@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cobra Extension | Secure Setup</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:24px;display:grid;place-items:center;background:radial-gradient(ellipse at 15% 15%,rgba(12,93,145,.28),transparent 42%),radial-gradient(ellipse at 85% 80%,rgba(150,20,40,.16),transparent 40%),#030b13;color:#edf7ff;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif}.wrap{width:min(850px,100%);border:1px solid rgba(88,211,255,.27);border-radius:22px;padding:clamp(22px,5vw,46px);background:linear-gradient(145deg,rgba(10,31,49,.96),rgba(3,13,23,.98));box-shadow:0 28px 90px #0008}.brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}.brand-icon{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#31d8ff,#1385d6);color:#03131c;font-size:23px}.brand strong{display:block;font-size:18px}.brand small{color:#8fa7b7;font-size:11px}.kicker{margin:0 0 8px;color:#ff6471;font-size:10px;font-weight:900;letter-spacing:.2em}h1{margin:0 0 13px;font-size:clamp(26px,4vw,38px);line-height:1.12}p{color:#b8cbd7;line-height:1.75;font-size:14px}.download{display:inline-flex;gap:10px;align-items:center;margin:12px 0 24px;padding:14px 19px;border-radius:10px;background:linear-gradient(135deg,#32d9ff,#13bce8);color:#03131c;font-weight:900;text-decoration:none;font-size:13px}.download:hover{filter:brightness(1.06)}.steps{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 24px}.step{padding:15px;border:1px solid rgba(91,196,231,.2);border-radius:12px;background:rgba(4,19,31,.52)}.step b{display:block;margin-bottom:6px;font-size:12px;color:#f3faff}.step span{display:block;color:#91a9b8;font-size:12px;line-height:1.65}.warning{padding:13px 15px;border-left:3px solid #ff4c5c;background:rgba(255,42,60,.07);color:#b8cbd7;font-size:12px;line-height:1.7}.links{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}.links a{color:#46dfff;font-size:12px;font-weight:800;text-decoration:none}.footer{margin-top:28px;color:#607888;font-size:9px;letter-spacing:.14em}@media(max-width:580px){body{padding:12px}.steps{grid-template-columns:1fr}.wrap{padding:22px}}
+</style></head>
+<body><main class="wrap">
+<div class="brand"><div class="brand-icon"><i class="bi bi-shield-lock-fill"></i></div><div><strong>COBRA · SECURE EXTENSION SETUP</strong><small>Authorized browser integration</small></div></div>
+<p class="kicker">INSTALLATION &amp; REFERENCE</p><h1>Approved Extension Required</h1>
+<p>To use the Cobra Return Address workflow, install the approved Chrome extension and enable it for the Cobra website. This package connects the page to your already-authenticated Delhivery RPC session; it does not ask for or store your RPC password.</p>
+<a class="download" href="/cobra-rpc-extension.zip" download><i class="bi bi-download"></i> DOWNLOAD CHROME EXTENSION (.ZIP)</a>
+<div class="steps">
+<div class="step"><b>01 · Extract</b><span>Extract the downloaded ZIP into a folder you can keep on this computer.</span></div>
+<div class="step"><b>02 · Open Extensions</b><span>In Chrome, open <code>chrome://extensions</code> and turn on Developer mode.</span></div>
+<div class="step"><b>03 · Load unpacked</b><span>Click “Load unpacked” and select the extracted extension folder containing <code>manifest.json</code>.</span></div>
+<div class="step"><b>04 · Allow site access</b><span>Set extension site access to the Cobra website, then refresh Cobra. Sign in to Delhivery RPC in the same Chrome profile.</span></div>
+</div>
+<div class="warning"><b>Security notice:</b> Install only the extension package provided by your developer. This browser-side extension check is an access gate for the user interface, not strong server-side authentication. Do not treat the page URL or extension check as protection for confidential data by itself.</div>
+<div class="links"><a href="/">← Return to Cobra</a><a href="https://hq.delhivery.com/" target="_blank" rel="noopener noreferrer">Open Delhivery RPC ↗</a></div>
+<div class="footer">COBRA APPLICATION · DEVELOPER-MANAGED ACCESS</div>
+</main></body></html>
