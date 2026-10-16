@@ -18,7 +18,7 @@ Static website for Cobra's barcode label workflow, with the Chrome extension bri
 5. Ensure the extension is enabled, then refresh the Cobra website.
 6. Sign in to Delhivery RPC in the same Chrome profile before fetching Waybills.
 
-The extension manifest includes the current Vercel host `cobra-web-09-676r.vercel.app`. If you change the Vercel project/domain, update `host_permissions` and `content_scripts.matches` in `extension/manifest.json`, rebuild `cobra-rpc-extension.zip`, and reinstall/reload the extension.
+The extension manifest allows the current Vercel host `cobra-web-09-e5c4.vercel.app` and the previous host `cobra-web-09-676r.vercel.app`. If you change the Vercel project/domain, update `host_permissions` and `content_scripts.matches` in `extension/manifest.json`, rebuild `cobra-rpc-extension.zip`, and reinstall/reload the extension.
 
 ## Important
 
