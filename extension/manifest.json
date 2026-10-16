@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Cobra RPC Return Address Bridge",
+  "version": "2.0.2",
+  "description": "Fetches authenticated Delhivery RPC Return Address CSV data directly into Cobra without saving a CSV file.",
+  "permissions": [
+    "downloads",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://hq.delhivery.com/*",
+    "https://cobra-web-097.vercel.app/*",
+    "https://cobra-web-09-676r.vercel.app/*",
+    "https://labelflow-app-sigma.vercel.app/*",
+    "file:///*",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+  "action": {
+    "default_title": "Cobra RPC Return Address Bridge"
+  },
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://cobra-web-097.vercel.app/*",
+        "https://cobra-web-09-676r.vercel.app/*",
+        "https://labelflow-app-sigma.vercel.app/*",
+        "file:///*",
+        "http://localhost/*",
+        "http://127.0.0.1/*"
+      ],
+      "js": [
+        "cobra-page-bridge.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

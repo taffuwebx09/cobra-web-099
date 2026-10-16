@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cobra Web App — Advanced Barcode Generator</title>
+<link rel="icon" type="image/png" href="cobra-favicon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="style.css">
+<script>
+(function () {
+  const nav = performance.getEntriesByType('navigation')[0];
+  if (nav && nav.type === 'reload') window.location.replace('index.html');
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+</head>
+<body class="extension-locked">
+<div id="extensionAccessGate" class="extension-access-gate" role="alert" aria-live="polite">
+  <section class="extension-access-card">
+    <div class="gate-lock-icon" aria-hidden="true"><i class="bi bi-shield-lock-fill"></i></div>
+    <p class="gate-kicker">RESTRICTED ACCESS NOTICE</p>
+    <h1>UNAUTHORIZED ACCESS RESTRICTED</h1>
+    <p class="gate-message">The developer has not authorized access to this application for this user. Access is restricted to approved users only. Contact the developer directly if you require access.</p>
+    <p class="gate-message gate-secondary">Unauthorized access attempts are prohibited. Access may be granted only by the developer.</p>
+    <small class="gate-footnote">COBRA APPLICATION · ACCESS CONTROL</small>
+  </section>
+</div>
+<main class="app-shell">
+  <header class="app-header">
+    <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="brand">
+      <img class="brand-logo" src="taffu-logo-center.png" alt="Taffu Logistics Barcode Generator">
+    </div>
+    <div class="header-tagline" aria-label="Fast Simple Accurate"><span>FAST</span><span>SIMPLE</span><span>ACCURATE</span></div>
+  </header>
+
+  <section class="controls" aria-label="Label controls">
+    <div class="panel-glow"></div>
+
+    <div class="mode-buttons" aria-label="Label type">
+      <button id="rtoBtn" class="mode-btn" type="button"><i class="mode-icon bi bi-arrow-return-left" aria-hidden="true"></i> RTO</button>
+      <button id="dtoBtn" class="mode-btn active" type="button"><i class="mode-icon bi bi-box-seam" aria-hidden="true"></i> DTO</button>
+    </div>
+
+    <!-- Legacy Excel controls stay hidden for compatibility; Waybill-first integration uses the same label generator. -->
+    <div class="legacy-upload-controls" aria-hidden="true">
+      <button id="uploadBtn" type="button">Upload Excel</button>
+      <input id="excelInput" type="file" accept=".xlsx,.xls,.csv" hidden>
+    </div>
+
+    <div class="waybill-entry-card">
+      <div class="waybill-entry-head">
+        <label for="waybillPasteInput"><i class="bi bi-upc-scan" aria-hidden="true"></i> WAYBILL INPUT</label>
+        <span class="entry-hint">Paste or scan · max 200</span>
+      </div>
+      <textarea id="waybillPasteInput" rows="3" spellcheck="false" autocomplete="off" placeholder="Paste Waybill numbers here…&#10;One per line or separated by spaces"></textarea>
+      <div class="waybill-entry-footer">
+        <span id="waybillPasteCount">0 / 200 Waybills</span>
+        <div class="waybill-entry-actions">
+          <button id="clearBtn" class="action-btn compact-clear" type="button"><i class="bi bi-trash3" aria-hidden="true"></i> Clear</button>
+          <button id="fetchWaybillsBtn" class="action-btn primary compact-fetch" type="button"><i class="bi bi-cloud-download" aria-hidden="true"></i> Fetch &amp; Generate</button>
+        </div>
+      </div>
+      <div id="waybillInputMessage" class="waybill-input-message" role="status" aria-live="polite">Waiting for Chrome extension connection.</div>
+    </div>
+
+    <div class="section-heading"><span class="heading-icon">▤</span><span>WAYBILL SEARCH</span><span class="heading-count">LIVE</span></div>
+    <div class="waybill-search glass-input-row">
+      <input id="waybillSearch" type="search" placeholder="Find Waybill Number..." autocomplete="off" spellcheck="false">
+      <button id="findWaybillBtn" type="button">Find</button>
+    </div>
+    <div id="waybillResult" role="status" aria-live="polite"></div>
+
+    <div class="file-card">
+      <div class="file-meta">
+        <span class="file-icon"><svg class="icon sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/></svg></span>
+        <div class="file-copy"><small>DATA SOURCE</small><span id="fileName" class="file-name-text">Waiting for Waybills</span></div>
+      </div>
+      <span id="status" class="file-badge">STANDBY</span>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card"><span class="stat-icon red">▥</span><div><small>TOTAL LABELS</small><strong id="totalLabelsDisplay">0</strong></div></div>
+      <div class="stat-card"><span class="stat-icon cyan">✓</span><div><small>BARCODE TYPE</small><strong>CODE128</strong></div></div>
+    </div>
+
+    <div class="print-card">
+      <div class="print-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5h-2"/><path d="M6 14h12v7H6z"/><path d="M18 12h.01"/></svg></div>
+      <div><strong>PRINT SETUP</strong><span>4 × 2.5 inch · Thermal Printer</span></div>
+    </div>
+
+    <button id="printBtn" class="print-all action-btn" type="button">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5h-2"/><path d="M6 14h12v7H6z"/><path d="M18 12h.01"/></svg>
+      PRINT ALL LABELS
+    </button>
+
+    <div class="controls-footer">Made by Tafajjul</div>
+  </section>
+
+  <section class="preview-shell" aria-label="Barcode preview">
+    <div class="preview-header no-print">
+      <div class="preview-header-left">
+        <span class="preview-eye">◉</span>
+        <strong>PREVIEW</strong>
+        <span id="previewCount">Total Labels: 0</span>
+      </div>
+      <div class="preview-tools no-print">
+        <button type="button" aria-label="Zoom out">−</button><span>100%</span><button type="button" aria-label="Zoom in">+</button>
+        <button type="button" aria-label="Fullscreen">⛶</button>
+      </div>
+    </div>
+    <div class="preview-body">
+      <div class="preview-stage-label">LABEL PREVIEW</div>
+      <div id="labelsEmpty" class="labels-empty">
+        <div class="empty-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h2v14H4zM9 5h1v14H9zM13 5h2v14h-2zM18 5h2v14h-2z"/></svg></div>
+        <strong>Generated labels will appear here</strong><span>Paste or scan Waybills to fetch RPC data and generate labels.</span>
+      </div>
+      <div id="labels"></div>
+    </div>
+  </section>
+</main>
+
+<div id="successPrintModal" class="success-modal" role="dialog" aria-modal="true" aria-labelledby="successModalTitle" aria-describedby="successModalMessage" hidden>
+  <div class="success-modal-backdrop"></div>
+  <section class="success-modal-card" role="document">
+    <div class="success-modal-check" aria-hidden="true"><i class="bi bi-check2"></i></div>
+    <h2 id="successModalTitle">Labels Generated Successfully!</h2>
+    <p id="successModalMessage">Return Address data fetched and labels are ready to print.</p>
+    <button id="successPrintBtn" class="action-btn primary success-print-btn" type="button"><i class="bi bi-printer" aria-hidden="true"></i> PRINT LABELS <span class="enter-hint">↵ Enter</span></button>
+    <small>Press Enter or click the button to print. The workspace resets after the print dialog closes.</small>
+  </section>
+</div>
+
+<script src="advanced-app.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>
